@@ -6,11 +6,11 @@ import supervision as sv
 import cv2
 
 # define the image url to use for inference
-image_file = "people-walking.jpg"
+image_file = "img1.png"
 image = cv2.imread(image_file)
 
 # load a pre-trained yolov8n model
-model = get_model(model_id="yolov8n-640")
+model = get_model(model_id="droplet-detection-my1rz/9")
 
 # run inference on our chosen image, image can be a url, a numpy array, a PIL image, etc.
 results = model.infer(image)
