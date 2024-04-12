@@ -23,6 +23,7 @@ if len(results[0].predictions) == 300:
     slicer = sv.InferenceSlicer(callback = callback, slice_wh = [380, 380], overlap_ratio_wh = [0.32,0.32])
     detections = slicer(image)
 else:
+    size = len(results[0].predictions)
     for i in range(size):
         res.append(results[0].predictions[i].__dict__)
     detections = sv.Detections.from_inference(results[0].dict(by_alias=True, exclude_none=True))
@@ -32,9 +33,13 @@ data = json.load(open('data.json', 'r'))
 df = pd.DataFrame(data)
 df['area'] = df['width'] * df['height'] 
 ax = df.plot.hist(column = ["area"], bins = 30)
+fig = ax.get_figure()
+fig.savefig('Size_Plots/figure.png')
 print(len(data))
 bounding_box_annotator = sv.BoundingBoxAnnotator()
 label_annotator = sv.LabelAnnotator()
 annotated_image = bounding_box_annotator.annotate(
     scene=image, detections=detections)
 sv.plot_image(annotated_image)
+with sv.ImageSink(target_dir_path='Annotated_Images', overwrite = True) as sink:
+    sink.save_image(image=annotated_image)
