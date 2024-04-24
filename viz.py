@@ -8,7 +8,7 @@ import pandas as pd
 from PIL import Image
 import glob
 
-model = get_model(model_id="droplet-detection-my1rz/9", api_key="OLUKLjYzlIrdzHYZTVZq")
+model = get_model(model_id="droplet-detection-my1rz/13", api_key="OLUKLjYzlIrdzHYZTVZq")
 files = glob.glob('images/*.png')
 file_name = []
 for i in range(len(files)):
@@ -20,6 +20,7 @@ for j in range(len(files)):
     global res
     res = []
     if width * height > 300000:
+        print('big')
         def callback(image_slice: np.ndarray) -> sv.Detections:
             results = model.infer(image_slice, conf = 0.01, verbose = True, max_det = 10000)
             size = len(results[0].predictions)
@@ -30,6 +31,7 @@ for j in range(len(files)):
         slicer = sv.InferenceSlicer(callback = callback, slice_wh = [380, 380], overlap_ratio_wh = [0.32,0.32])
         detections = slicer(image)
     else:
+        print('small')
         results = model.infer(image, conf = 0.01, verbose = True, max_det = 10000)
         size = len(results[0].predictions)
         for i in range(size):
